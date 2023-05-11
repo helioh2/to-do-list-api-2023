@@ -5,6 +5,13 @@ const jwt = require("jsonwebtoken");
 const SALT_ROUNDS = 10
 const SECRET_KEY = process.env.SECRET_KEY || "SECRETKEY";
 
+class AuthError extends Error {
+    constructor(args){
+        super(args);
+        this.name = "AuthError"
+    }
+}
+
 const autenticaUsuario = async (usuario) => {
     const usuarioBd = await Usuario.findOne({username: usuario.username})
     if (bcrypt.compareSync(usuario.senha, usuarioBd.senha)) {
@@ -13,8 +20,7 @@ const autenticaUsuario = async (usuario) => {
         const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '60m'})
         return {usuario: usuarioBd, token: token};
     } else {
-
-        throw new Error("Não foi possível autenticar usuário");
+        throw new AuthError("Não foi possível autenticar usuário");
     }
 }
 
@@ -32,7 +38,7 @@ const validarToken = (token) => {
         const user = payload.user
         return user
     } catch (err) {
-        throw new Error("Erro de autenticação: " + err);
+        throw new AuthError("Erro de autenticação: " + err);
     }
 
 }

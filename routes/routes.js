@@ -5,8 +5,7 @@ const AutenticacaoController = require("../controllers/AutenticacaoController");
 routes.get("/tarefas", TarefaController.getAllTarefas);
 routes.get("/tarefas/:id", TarefaController.getTarefaById);
 routes.post("/tarefas", TarefaController.createTarefa);
-routes.put("/tarefas/:id", TarefaController.editarTarefaPut);
-routes.patch("/tarefas/:id", TarefaController.editarTarefaPatch);
+routes.patch("/tarefas/:id", TarefaController.editarTarefa);
 routes.delete("/tarefas/:id", TarefaController.apagarTarefa);
 
 
