@@ -12,6 +12,5 @@ routes.delete("/tarefas/:id", TarefaController.apagarTarefa);
 
 routes.post("/usuarios", AutenticacaoController.signup);
 routes.post("/usuarios/login", AutenticacaoController.login);
-routes.delete("/usuarios/login", AutenticacaoController.logout);
 
 module.exports = routes;

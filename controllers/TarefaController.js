@@ -1,14 +1,21 @@
+const { StatusCodes } = require("http-status-codes");
 const TarefaService = require("../services/TarefaService")
-const Usuario = require("../models/Usuario");
+const UsuarioService = require("../services/UsuarioService")
 
 const getAllTarefas = async (req, res) => {
     
-    const usuarios = await Usuario.find().limit(1) //PEGANDO PRIMEIRO USUARIO DO BANCO POR ENQUANTO
-    const idUsuario = usuarios[0]["_id"]
+    const [, token] = req.headers.authorization?.split(" ") || [" ", " "];
+    
+    if (!token) {
+        res.status(StatusCodes.UNAUTHORIZED).send({error: "Acesso negado. Nenhum token fornecido."});
+    }
+
     try {
-        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(idUsuario);
+        const usuario = UsuarioService.validarToken(token)
+        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(usuario.id);
         res.send(listaTarefas);
     } catch (err) {
+        // console.trace(err)
         res.status(500).send({error: err.message})
     }
 }
