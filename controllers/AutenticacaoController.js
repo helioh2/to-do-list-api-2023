@@ -1,8 +1,16 @@
-const UsuarioService = require("../services/UsuarioService");
-const StatusCodes = require('http-status-codes').StatusCodes;
+import UsuarioService from "../services/UsuarioService.js";
+import { StatusCodes } from 'http-status-codes';
 
 
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
+  /* 	#swagger.tags = ['Usuario']
+        #swagger.description = 'Cadastra novo usuario' */
+  
+  /*  #swagger.parameters['obj'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
+
   let usuario = req.body;
   try {
     usuario = await UsuarioService.createUsuario(usuario);
@@ -13,7 +21,14 @@ const signup = async (req, res) => {
   } 
 }
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
+  /* 	#swagger.tags = ['Usuario']
+        #swagger.description = 'Realiza login (gera token JWT)' */
+
+  /*  #swagger.parameters['obj'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
   let usuario = req.body;
   console.log(usuario)
   try {
@@ -24,10 +39,4 @@ const login = async (req, res) => {
     console.trace(err)
     res.status(500).send({error: err.message})
   } 
-};
-
-
-module.exports = {
-  login,
-  signup
 };

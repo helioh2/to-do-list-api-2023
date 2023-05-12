@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
+import { connect } from "mongoose";
 
 const conectarAoDb = () => {
-  mongoose
-    .connect(
+  connect(
       process.env.DB_URI, // setar por variável de ambiente mais tarde
       {
         useNewUrlParser: true,
@@ -13,4 +12,4 @@ const conectarAoDb = () => {
     .catch((err) => console.log(err)); 
 };
 
-module.exports = conectarAoDb;
+export default conectarAoDb;

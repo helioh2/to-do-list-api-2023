@@ -1,50 +1,53 @@
-const { StatusCodes } = require("http-status-codes");
-const TarefaService = require("../services/TarefaService")
-const UsuarioService = require("../services/UsuarioService")
+import { StatusCodes } from "http-status-codes";
+import TarefaService from "../services/TarefaService.js";
 
-
-const getTokenFromRequest = (req, res) => {
-    const [, token] = req.headers.authorization?.split(" ") || [" ", " "];
-    
-    if (!token) {
-        return res.status(StatusCodes.UNAUTHORIZED).send(
-            {error: "Acesso negado. Nenhum token fornecido."}
-        );
-        
-    }
-
-    return token
-}
 
 const returnError = (err, res) => {
-    // console.trace(err)
     let statusCode = 500
-    if (err.name == "AuthError"){
-        statusCode = StatusCodes.UNAUTHORIZED
-    }
     res.status(statusCode).send({error: err.message})
 }
 
-const getAllTarefas = async (req, res) => {
+export const getAllTarefas = async (req, res) => {
+
+    // TODO: Corrigir swagger para indicar retorno de lista de tarefa
     
-    const token = getTokenFromRequest(req, res);
+    /* 	#swagger.tags = ['Tarefa']
+        #swagger.description = 'Endpoint para pegar todas as tarefas'
+        #swagger.schema: { $ref: '#/components/schemas/Tarefa' } */
+
+    /*  #swagger.responses[200] = {
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
+
+    /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
 
     try {
-        const usuario = UsuarioService.validarToken(token)
-        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(usuario.id);
+        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(req.user.id);
         res.send(listaTarefas);
     } catch (err) {
         returnError(err, res)
     }
 }
 
-const getTarefaById = async (req, res) => {
-    const token = getTokenFromRequest(req, res);
+export const getTarefaById = async (req, res) => {
+
+    /* 	#swagger.tags = ['Tarefa']
+        #swagger.description = 'Endpoint para pegar tarefa por id' */
+
+    /*  #swagger.responses[200] = {
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
+
+    /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
+
     const idTarefa = req.params.id
 
     try {
-        const usuario = UsuarioService.validarToken(token);
-        const tarefa = await TarefaService.getTarefaById(idTarefa, usuario.id);
+        const tarefa = await TarefaService.getTarefaById(idTarefa, req.user.id);
         res.send(tarefa);
     } catch (err) {
         returnError(err, res);
@@ -52,50 +55,70 @@ const getTarefaById = async (req, res) => {
 }
 
 
-const editarTarefa = async (req, res) => {
-    const token = getTokenFromRequest(req, res);
+export const editarTarefa = async (req, res) => {
+
+    /* 	#swagger.tags = ['Tarefa']
+        #swagger.description = 'Endpoint para editar tarefa' */
+
+    /*  #swagger.parameters['obj'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
+
+    /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
 
     const edicao = req.body;
     const idTarefa = req.params.id
     try {
-        const usuario = UsuarioService.validarToken(token);
-        const tarefa = await TarefaService.updateTarefa(idTarefa, edicao, usuario.id);
+        const tarefa = TarefaService.updateTarefa(idTarefa, edicao, req.user.id);
         res.send(tarefa)
     } catch (err) {
         returnError(err, res);
     }
 }
 
-const createTarefa = async (req, res) => {
-    const token = getTokenFromRequest(req, res);
+export const createTarefa = async (req, res) => {
+
+    /* 	#swagger.tags = ['Tarefa']
+        #swagger.description = 'Endpoint para criar nova tarefa */
+
+    /*  #swagger.parameters['obj'] = {
+            in: 'body',
+            schema: { $ref: '#/components/schemas/Tarefa' }
+    } */
+
+    /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
+
     const tarefa = req.body;
     
     try {
-        const usuario = UsuarioService.validarToken(token);
-        tarefa.idUsuario = usuario.id
-        const tarefaRes = await TarefaService.createTarefa(tarefa);
+        tarefa.idUsuario = req.user.id
+        const tarefaRes = TarefaService.createTarefa(tarefa);
         return res.send(tarefaRes);
     } catch (err) {
         returnError(err, res);
     }
 }
 
-const apagarTarefa = async (req, res) => {
-    const token = getTokenFromRequest(req, res);
+export const apagarTarefa = async (req, res) => {
+
+    /* 	#swagger.tags = ['Tarefa']
+        #swagger.description = 'Endpoint para apagar tarefa' */
+
+    /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
+
     const id = req.params.id;
     try {
-        const usuario = UsuarioService.validarToken(token);
-        await TarefaService.deleteTarefaById(id, usuario.id);
+        await TarefaService.deleteTarefaById(id, req.user.id);
         res.send({})
     } catch (err) {
         returnError(err, res);
     }
 }
 
-module.exports = {
-    getAllTarefas,
-    createTarefa,
-    editarTarefa,
-    apagarTarefa,
-    getTarefaById
-}

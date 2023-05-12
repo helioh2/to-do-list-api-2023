@@ -1,15 +1,19 @@
-const routes = require("express").Router();
-const TarefaController = require("../controllers/TarefaController");
-const AutenticacaoController = require("../controllers/AutenticacaoController");
+import {Router} from "express";
+import { getAllTarefas, getTarefaById, createTarefa, editarTarefa, apagarTarefa } from "../controllers/TarefaController.js";
+import { signup, login } from "../controllers/AutenticacaoController.js";
 
-routes.get("/tarefas", TarefaController.getAllTarefas);
-routes.get("/tarefas/:id", TarefaController.getTarefaById);
-routes.post("/tarefas", TarefaController.createTarefa);
-routes.patch("/tarefas/:id", TarefaController.editarTarefa);
-routes.delete("/tarefas/:id", TarefaController.apagarTarefa);
+import {authMiddleware} from "../middlewares/auth.middleware.js";
+
+const routes = Router();
+
+routes.get("/tarefas", authMiddleware, getAllTarefas);
+routes.get("/tarefas/:id", authMiddleware, getTarefaById);
+routes.post("/tarefas", authMiddleware, createTarefa);
+routes.patch("/tarefas/:id", authMiddleware, editarTarefa);
+routes.delete("/tarefas/:id", authMiddleware, apagarTarefa);
 
 
-routes.post("/usuarios", AutenticacaoController.signup);
-routes.post("/usuarios/login", AutenticacaoController.login);
+routes.post("/usuarios", signup);
+routes.post("/usuarios/login", login);
 
-module.exports = routes;
+export default routes;
