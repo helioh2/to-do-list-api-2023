@@ -34,7 +34,7 @@ export const authMiddleware = (req, res, next) => {
         return res.status(StatusCodes.UNAUTHORIZED).send({ message: "Token inválido!" });
       }
 
-      const user = decoded.user;
+      const user = JSON.parse(decoded.user);
 
       req.user = user;
 

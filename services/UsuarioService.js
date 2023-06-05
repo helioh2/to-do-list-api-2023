@@ -16,7 +16,7 @@ const autenticaUsuario = async (usuario) => {
     
     const usuarioBd = await Usuario.findOne({username: usuario.username})
     if (compareSync(usuario.senha, usuarioBd.senha)) {
-        usuarioBd.senha = ""
+        usuarioBd.senha = ""   // LIMPANDO SENHA DA RESPOSTA
         const payload = {user: JSON.stringify(usuarioBd)}
         const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '60m'})
         return {usuario: usuarioBd, token: token};

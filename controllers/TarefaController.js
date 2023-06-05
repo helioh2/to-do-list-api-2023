@@ -24,7 +24,7 @@ export const getAllTarefas = async (req, res) => {
     }] */
 
     try {
-        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(req.user.id);
+        const listaTarefas = await TarefaService.getAllTarefasByIdUsuario(req.user._id);
         res.send(listaTarefas);
     } catch (err) {
         returnError(err, res)
@@ -47,7 +47,7 @@ export const getTarefaById = async (req, res) => {
     const idTarefa = req.params.id
 
     try {
-        const tarefa = await TarefaService.getTarefaById(idTarefa, req.user.id);
+        const tarefa = await TarefaService.getTarefaById(idTarefa, req.user._id);
         res.send(tarefa);
     } catch (err) {
         returnError(err, res);
@@ -72,12 +72,39 @@ export const editarTarefa = async (req, res) => {
     const edicao = req.body;
     const idTarefa = req.params.id
     try {
-        const tarefa = TarefaService.updateTarefa(idTarefa, edicao, req.user.id);
+        const tarefa = TarefaService.updateTarefa(idTarefa, edicao, req.user._id);
         res.send(tarefa)
     } catch (err) {
         returnError(err, res);
     }
 }
+
+
+
+
+// export const editarTarefaPut = async (req, res) => {
+
+//     /* 	#swagger.tags = ['Tarefa']
+//         #swagger.description = 'Endpoint para editar tarefa' */
+
+//     /*  #swagger.parameters['obj'] = {
+//             in: 'body',
+//             schema: { $ref: '#/components/schemas/Tarefa' }
+//     } */
+
+//     /* #swagger.security = [{
+//             "apiKeyAuth": []
+//     }] */
+
+//     const tarefa = req.body;
+//     const idTarefa = req.params.id
+//     try {
+//         const tarefa = TarefaService.updateTarefa(idTarefa, tarefa, req.user._id);
+//         res.send(tarefa)
+//     } catch (err) {
+//         returnError(err, res);
+//     }
+// }
 
 export const createTarefa = async (req, res) => {
 
@@ -96,8 +123,8 @@ export const createTarefa = async (req, res) => {
     const tarefa = req.body;
     
     try {
-        tarefa.idUsuario = req.user.id
-        const tarefaRes = TarefaService.createTarefa(tarefa);
+        tarefa.idUsuario = req.user._id
+        const tarefaRes = await TarefaService.createTarefa(tarefa);
         return res.send(tarefaRes);
     } catch (err) {
         returnError(err, res);
@@ -115,7 +142,7 @@ export const apagarTarefa = async (req, res) => {
 
     const id = req.params.id;
     try {
-        await TarefaService.deleteTarefaById(id, req.user.id);
+        await TarefaService.deleteTarefaById(id, req.user._id);
         res.send({})
     } catch (err) {
         returnError(err, res);

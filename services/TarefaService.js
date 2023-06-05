@@ -10,7 +10,7 @@ const getTarefaById = async (idTarefa, idUsuario) => {
 }
 
 const createTarefa = async (tarefa) => {
-    await Tarefa.create(tarefa)
+    return await Tarefa.create(tarefa)
 }
 
 const updateTarefa = async (idTarefa, edicao, idUsuario) => {

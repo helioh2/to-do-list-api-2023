@@ -10,6 +10,7 @@ routes.get("/tarefas", authMiddleware, getAllTarefas);
 routes.get("/tarefas/:id", authMiddleware, getTarefaById);
 routes.post("/tarefas", authMiddleware, createTarefa);
 routes.patch("/tarefas/:id", authMiddleware, editarTarefa);
+// routes.put("/tarefas/:id", authMiddleware, editarTarefaPut);
 routes.delete("/tarefas/:id", authMiddleware, apagarTarefa);
 
 

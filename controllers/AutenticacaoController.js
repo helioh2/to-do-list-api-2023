@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
   
   /*  #swagger.parameters['obj'] = {
             in: 'body',
-            schema: { $ref: '#/components/schemas/Tarefa' }
+            schema: { $ref: '#/components/schemas/Usuario' }
     } */
 
   let usuario = req.body;
