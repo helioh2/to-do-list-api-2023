@@ -68,11 +68,14 @@ export const editarTarefa = async (req, res) => {
     /* #swagger.security = [{
             "apiKeyAuth": []
     }] */
-
-    const edicao = req.body;
-    const idTarefa = req.params.id
     try {
-        const tarefa = TarefaService.updateTarefa(idTarefa, edicao, req.user._id);
+        const edicao = req.body;
+        const idTarefa = req.params.id
+        if (!idTarefa || idTarefa == undefined) {
+            returnError(err, res);
+        }
+    
+        const tarefa = await TarefaService.updateTarefa(idTarefa, edicao, req.user._id);
         res.send(tarefa)
     } catch (err) {
         returnError(err, res);

@@ -1,6 +1,8 @@
 import UsuarioService from "../services/UsuarioService.js";
 import { StatusCodes } from 'http-status-codes';
+import jwt from 'jsonwebtoken';
 
+const SECRET_KEY = process.env.SECRET_KEY || "SECRETKEY";
 
 export const signup = async (req, res) => {
   /* 	#swagger.tags = ['Usuario']
@@ -40,3 +42,23 @@ export const login = async (req, res) => {
     res.status(500).send({error: err.message})
   } 
 };
+
+export const validaToken = async (req, res) => {
+  try {
+    let token = req.body.token;
+    
+    jwt.verify(token, SECRET_KEY, async (error, decoded) => {
+      if (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).send({ message: "Token inválido!" });
+      }
+
+      if (!decoded.user) {
+        return res.status(StatusCodes.UNAUTHORIZED).send({ message: "Token inválido!" });
+      }
+
+      return res.status(StatusCodes.OK).send({message: "Token válido"});
+    });
+  } catch (err) {
+    res.status(500).send({error: err.message})
+  }
+}

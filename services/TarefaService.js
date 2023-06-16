@@ -5,8 +5,9 @@ const getAllTarefasByIdUsuario = async (idUsuario) => {
 }
 
 const getTarefaById = async (idTarefa, idUsuario) => {
-    const tarefa = await Tarefa.find({_id: idTarefa, idUsuario: idUsuario});
+    const tarefa = await Tarefa.findOne({_id: idTarefa, idUsuario: idUsuario});
     return tarefa
+    
 }
 
 const createTarefa = async (tarefa) => {
@@ -14,6 +15,7 @@ const createTarefa = async (tarefa) => {
 }
 
 const updateTarefa = async (idTarefa, edicao, idUsuario) => {
+
     await Tarefa.updateOne({ _id: idTarefa, idUsuario: idUsuario }, edicao)
     return getTarefaById(idTarefa, idUsuario)
 }

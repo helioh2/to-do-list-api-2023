@@ -8,13 +8,17 @@ import conectarAoDb from "./database/db.js";
 import { serve, setup } from 'swagger-ui-express';
 import swaggerFile from './swagger.json' assert { type: "json" };;
 
+import cors from 'cors';
+
 dotenv.config()
 
 conectarAoDb();
 const app = express()
 const port = process.env.PORT || 3000;  //será alterado por meio de variáveis de ambiente depois 
 
+
 app.use(json())
+app.use(cors())
 
 app.use(routes)
 
